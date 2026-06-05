@@ -52,7 +52,7 @@ const router = createBrowserRouter([
       {
         path: 'overview',
         element: (
-          <P permission="device:read">
+          <P permission="device:read" roles={['SystemAdmin', 'OrgAdmin']}>
             <OverviewPage />
           </P>
         ),

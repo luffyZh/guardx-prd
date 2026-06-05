@@ -153,16 +153,16 @@ export function AdminLayout() {
 
     if (p.startsWith('/admin/alarms')) return { title: '告警列表', roles: ['超级管理员', '组织管理员', '组织用户'] }
 
-    return { title: '概览', roles: ['超级管理员', '组织管理员', '组织用户'] }
+    return { title: '概览', roles: ['超级管理员', '组织管理员'] }
   }, [location.pathname])
 
   return (
     <div className="flex h-screen overflow-hidden bg-bg text-fg">
       <aside className="flex w-[260px] flex-col border-r border-border bg-surface">
         <div className="flex items-center justify-between border-b border-border px-4 py-4">
-          <div>
-            <div className="text-sm font-semibold">电子哨兵 Admin</div>
-            <div className="text-xs text-muted">{user?.role}</div>
+          <div className="flex items-center gap-2">
+            <img src="/favicon.svg" alt="favicon" className="h-10 w-10 rounded-full" />
+            <div className="text-xl font-semibold">电子哨兵管理系统</div>
           </div>
         </div>
         <nav className="flex flex-col gap-1 p-3">
