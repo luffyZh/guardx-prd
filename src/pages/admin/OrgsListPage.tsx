@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Plus } from 'lucide-react'
 import { Button } from '../../components/Button'
-import { Card, CardBody, CardHeader } from '../../components/Card'
+import { Card, CardBody } from '../../components/Card'
 import { Badge } from '../../components/Badge'
-import { Confirm, Modal } from '../../components/Modal'
+import { Drawer } from '../../components/Drawer'
+import { Confirm } from '../../components/Modal'
 import { Pagination } from '../../components/Pagination'
 import { ErrorText, Hint, Input, Label, Select, Textarea } from '../../components/Field'
 import { Table, Td, Th, Tr } from '../../components/Table'
@@ -13,7 +15,7 @@ import type { Org, OrgStatus } from '../../types/models'
 import { createId } from '../../lib/id'
 import { listOrgs, toggleOrgStatus, upsertOrg } from '../../mocks/api'
 
-const pageSize = 8
+const pageSize = 10
 
 function statusBadge(status: OrgStatus) {
   return status === 'Enabled' ? <Badge tone="success">启用</Badge> : <Badge tone="danger">停用</Badge>
@@ -144,103 +146,97 @@ export function OrgsListPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex min-h-0 flex-col gap-4">
       <Card>
-        <CardHeader>
-          <div>
-            <div className="text-base font-semibold">组织列表</div>
-            <div className="text-xs text-muted">支持搜索、筛选、分页</div>
+        <CardBody className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="搜索：组织名称 / 联系人"
+              className="w-full sm:w-[320px]"
+            />
+            <Select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as OrgStatus | 'All')}
+              className="w-full sm:w-[160px]"
+            >
+              <option value="All">全部状态</option>
+              <option value="Enabled">启用</option>
+              <option value="Disabled">停用</option>
+            </Select>
           </div>
           {canManage && (
-            <Button variant="primary" onClick={openCreate}>
+            <Button variant="primary" onClick={openCreate} className="self-start sm:self-auto">
+              <Plus className="inline-block w-4 h-4" />
               新增组织
             </Button>
           )}
-        </CardHeader>
-        <CardBody className="space-y-3">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-            <div className="space-y-2">
-              <Label>搜索</Label>
-              <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="组织名称 / 联系人" />
-              <Hint>模糊搜索</Hint>
-            </div>
-            <div className="space-y-2">
-              <Label>状态</Label>
-              <Select value={status} onChange={(e) => setStatus(e.target.value as OrgStatus | 'All')}>
-                <option value="All">全部</option>
-                <option value="Enabled">启用</option>
-                <option value="Disabled">停用</option>
-              </Select>
-              <Hint>启停控制影响组织下用户登录与设备交互</Hint>
-            </div>
-          </div>
-
-          {error && <ErrorText>{error}</ErrorText>}
-
-          <div className="rounded-2xl border border-border">
-            <Table>
-              <thead>
-                <tr>
-                  <Th>组织名称</Th>
-                  <Th>地区</Th>
-                  <Th>联系人</Th>
-                  <Th>电话</Th>
-                  <Th>状态</Th>
-                  <Th className="text-right">操作</Th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <Td colSpan={6} className="py-10 text-center text-muted">
-                      加载中...
-                    </Td>
-                  </tr>
-                ) : items.length === 0 ? (
-                  <tr>
-                    <Td colSpan={6} className="py-10 text-center text-muted">
-                      暂无数据
-                    </Td>
-                  </tr>
-                ) : (
-                  items.map((org) => (
-                    <Tr key={org.id}>
-                      <Td className="font-medium">
-                        <Link to={`/admin/orgs/${org.id}`} className="hover:underline">
-                          {org.name}
-                        </Link>
-                      </Td>
-                      <Td>{org.region}</Td>
-                      <Td>{org.contactName}</Td>
-                      <Td>{org.contactPhone}</Td>
-                      <Td>{statusBadge(org.status)}</Td>
-                      <Td className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button size="sm" onClick={() => openEdit(org)} disabled={!canManage}>
-                            编辑
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant={org.status === 'Enabled' ? 'danger' : 'primary'}
-                            onClick={() => askToggle(org)}
-                            disabled={!canManage}
-                          >
-                            {org.status === 'Enabled' ? '停用' : '启用'}
-                          </Button>
-                        </div>
-                      </Td>
-                    </Tr>
-                  ))
-                )}
-              </tbody>
-            </Table>
-          </div>
-
-          <Pagination page={page} pageSize={pageSize} total={total} onPageChange={setPage} />
         </CardBody>
       </Card>
 
-      <Modal
+      {error && <ErrorText>{error}</ErrorText>}
+
+      <Table className="rounded-2xl border border-border bg-surface shadow-card">
+        <thead>
+          <tr>
+            <Th>组织名称</Th>
+            <Th>地区</Th>
+            <Th>联系人</Th>
+            <Th>电话</Th>
+            <Th>状态</Th>
+            <Th className="text-right">操作</Th>
+          </tr>
+        </thead>
+        <tbody>
+          {loading ? (
+            <tr>
+              <Td colSpan={6} className="py-10 text-center text-muted">
+                加载中...
+              </Td>
+            </tr>
+          ) : items.length === 0 ? (
+            <tr>
+              <Td colSpan={6} className="py-10 text-center text-muted">
+                暂无数据
+              </Td>
+            </tr>
+          ) : (
+            items.map((org) => (
+              <Tr key={org.id}>
+                <Td className="font-medium">
+                  <Link to={`/admin/orgs/${org.id}`} className="hover:underline">
+                    {org.name}
+                  </Link>
+                </Td>
+                <Td>{org.region}</Td>
+                <Td>{org.contactName}</Td>
+                <Td>{org.contactPhone}</Td>
+                <Td>{statusBadge(org.status)}</Td>
+                <Td className="text-right">
+                  <div className="flex justify-end gap-2">
+                    <Button size="sm" onClick={() => openEdit(org)} disabled={!canManage}>
+                      编辑
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant={org.status === 'Enabled' ? 'danger' : 'primary'}
+                      onClick={() => askToggle(org)}
+                      disabled={!canManage}
+                    >
+                      {org.status === 'Enabled' ? '停用' : '启用'}
+                    </Button>
+                  </div>
+                </Td>
+              </Tr>
+            ))
+          )}
+        </tbody>
+      </Table>
+
+      <Pagination page={page} pageSize={pageSize} total={total} onPageChange={setPage} />
+
+      <Drawer
         open={editOpen}
         title={form?.name ? '编辑组织' : '新增组织'}
         onClose={() => setEditOpen(false)}
@@ -254,6 +250,11 @@ export function OrgsListPage() {
         }
       >
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div className="space-y-2 md:col-span-2">
+            <Label>组织 ID</Label>
+            <Input value={form?.id ?? ''} readOnly />
+            <Hint>系统自动生成</Hint>
+          </div>
           <div className="space-y-2">
             <Label>组织名称</Label>
             <Input value={form?.name ?? ''} onChange={(e) => setForm((p) => (p ? { ...p, name: e.target.value } : p))} />
@@ -283,7 +284,7 @@ export function OrgsListPage() {
           </div>
         </div>
         {editError && <div className="mt-3"><ErrorText>{editError}</ErrorText></div>}
-      </Modal>
+      </Drawer>
 
       <Confirm
         open={confirmOpen}

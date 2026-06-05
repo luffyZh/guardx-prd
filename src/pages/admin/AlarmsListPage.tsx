@@ -13,7 +13,7 @@ import { Tabs } from '../../components/Tabs'
 import type { Alarm, Org } from '../../types/models'
 import { deleteAlarm, listAlarms, listAllOrgs } from '../../mocks/api'
 
-const pageSize = 12
+const pageSize = 10
 
 function levelBadge(level: Alarm['level']) {
   if (level === 'Critical') return <Badge tone="danger">严重</Badge>

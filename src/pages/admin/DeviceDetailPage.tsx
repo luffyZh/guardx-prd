@@ -54,7 +54,7 @@ export function DeviceDetailPage() {
           timePreset: '7d',
           orgId: 'All',
           page: 1,
-          pageSize: 8,
+          pageSize: 10,
         })
         if (!alive) return
         setDevice(d)
@@ -105,7 +105,7 @@ export function DeviceDetailPage() {
         timePreset: '7d',
         orgId: 'All',
         page: 1,
-        pageSize: 8,
+        pageSize: 10,
       })
       setDevice(d)
       setAlarms(res.items)

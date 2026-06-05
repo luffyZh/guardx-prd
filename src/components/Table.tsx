@@ -22,7 +22,7 @@ export function Th({
     <th
       {...props}
       className={cn(
-        'whitespace-nowrap border-b border-border bg-bg/20 px-3 py-2 text-xs font-semibold text-muted',
+        'whitespace-nowrap border-b border-border bg-bg/100 px-4 py-4 text-md font-bold text-muted',
         className,
       )}
     />
@@ -33,7 +33,7 @@ export function Td({
   className,
   ...props
 }: React.TdHTMLAttributes<HTMLTableCellElement>) {
-  return <td {...props} className={cn('border-b border-border px-3 py-2 align-middle', className)} />
+  return <td {...props} className={cn('border-b border-border px-4 py-3 align-middle', className)} />
 }
 
 export function Tr({
@@ -42,4 +42,3 @@ export function Tr({
 }: React.HTMLAttributes<HTMLTableRowElement>) {
   return <tr {...props} className={cn('hover:bg-bg/20', className)} />
 }
-

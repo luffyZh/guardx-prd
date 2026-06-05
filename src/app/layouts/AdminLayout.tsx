@@ -159,10 +159,10 @@ export function AdminLayout() {
   return (
     <div className="flex h-screen overflow-hidden bg-bg text-fg">
       <aside className="flex w-[260px] flex-col border-r border-border bg-surface">
-        <div className="flex items-center justify-between border-b border-border px-4 py-4">
+        <div className="flex h-16 items-center justify-between border-b border-border px-4">
           <div className="flex items-center gap-2">
-            <img src="/favicon.svg" alt="favicon" className="h-10 w-10 rounded-full" />
-            <div className="text-xl font-semibold">电子哨兵管理系统</div>
+            <img src="/favicon.svg" alt="favicon" className="h-8 w-8 rounded-full" />
+            <div className="text-base font-semibold">电子哨兵管理系统</div>
           </div>
         </div>
         <nav className="flex flex-col gap-1 p-3">
@@ -175,7 +175,7 @@ export function AdminLayout() {
         </nav>
       </aside>
       <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        <header className="flex items-center justify-between border-b border-border bg-surface/90 px-6 py-4 backdrop-blur">
+        <header className="flex h-16 items-center justify-between border-b border-border bg-surface/90 px-6 backdrop-blur">
           <div className="flex min-w-0 items-center gap-3">
             <div className="truncate text-base font-semibold">{headerMeta.title}</div>
             <div className="flex flex-wrap items-center gap-2">

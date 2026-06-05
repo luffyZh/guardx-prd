@@ -10,7 +10,7 @@ import { Table, Td, Th, Tr } from '../../components/Table'
 import type { Batch, BatchDeviceItem } from '../../types/models'
 import { getBatch, listBatchDevices } from '../../mocks/api'
 
-const pageSize = 12
+const pageSize = 10
 
 export function BatchDetailPage() {
   const { batchId } = useParams()
