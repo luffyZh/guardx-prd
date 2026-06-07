@@ -9,6 +9,7 @@ import { ErrorText, Hint, Input, Label, Select, Textarea } from '../../component
 import { Confirm, Modal } from '../../components/Modal'
 import { Pagination } from '../../components/Pagination'
 import { Table, Td, Th, Tr } from '../../components/Table'
+import { formatCoord } from '../../lib/coords'
 import type { Org } from '../../types/models'
 import type { Device, DeviceOnlineStatus } from '../../types/models'
 import { getDevice, listAllOrgs, listDevices, unbindDevice, updateDevice } from '../../mocks/api'
@@ -224,7 +225,7 @@ export function DevicesListPage() {
               <thead>
                 <tr>
                   <Th>设备 ID</Th>
-                  <Th>设备名称</Th>
+                  <Th>位置信息</Th>
                   <Th>归属组织</Th>
                   <Th>在线状态</Th>
                   <Th>电量/网络</Th>
@@ -249,7 +250,7 @@ export function DevicesListPage() {
                   items.map((d) => (
                     <Tr key={d.id}>
                       <Td className="font-medium">{d.id}</Td>
-                      <Td>{d.name}</Td>
+                      <Td className="text-xs text-muted">{d.coords ? formatCoord(d.coords.lat, d.coords.lng) : '-'}</Td>
                       <Td className="text-xs text-muted">{d.orgId ? orgName(d.orgId) : '-'}</Td>
                       <Td>{statusView(d.onlineStatus)}</Td>
                       <Td className="text-xs text-muted">

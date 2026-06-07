@@ -250,6 +250,7 @@ const devices: Device[] = [
     ip: '10.23.1.12',
     firmwareVersion: '3.0.12',
     location: '南门主通道',
+    coords: { lat: 30.75012, lng: 120.76088 },
     batchId: 'GuardXV1202605',
     bindAt: nowIso(),
   },
@@ -263,6 +264,7 @@ const devices: Device[] = [
     ip: '10.23.1.13',
     firmwareVersion: '2.0.8',
     location: '东门围栏',
+    coords: { lat: 30.74902, lng: 120.76341 },
     batchId: 'GuardXV1202605',
     bindAt: nowIso(),
   },
@@ -273,6 +275,7 @@ const devices: Device[] = [
     model: 'HVS-3.0',
     onlineStatus: 'Unactivated',
     location: '西门车道',
+    coords: { lat: 29.65677, lng: 91.13221 },
     batchId: 'GuardXV1202605',
   },
   {
@@ -312,7 +315,7 @@ const batchDeviceItems: Record<string, BatchDeviceItem[]> = {
 const alarms: Alarm[] = [
   {
     id: 'ALM_0001',
-    occurredAt: nowIso(),
+    occurredAt: new Date(Date.now() - 1000 * 60 * 6).toISOString(),
     type: '人员闯入',
     level: 'Critical',
     deviceId: 'GuardXV1202605_0001',
@@ -323,8 +326,8 @@ const alarms: Alarm[] = [
   },
   {
     id: 'ALM_0002',
-    occurredAt: nowIso(),
-    type: '异常徘徊',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+    type: '人员徘徊',
     level: 'Warning',
     deviceId: 'GuardXV1202605_0002',
     deviceName: '东门围栏哨兵',
@@ -335,8 +338,183 @@ const alarms: Alarm[] = [
   },
   {
     id: 'ALM_0003',
-    occurredAt: nowIso(),
-    type: '未戴安全帽',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 19).toISOString(),
+    type: '车辆违停',
+    level: 'Info',
+    deviceId: 'GuardXV1202605_0001',
+    deviceName: '南门主通道哨兵',
+    orgId: 'org_xja',
+    location: '南门主通道',
+    status: 'Resolved',
+    handler: 'XJA_User',
+  },
+  {
+    id: 'ALM_0004',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 27).toISOString(),
+    type: '无人机靠近',
+    level: 'Warning',
+    deviceId: 'GuardXV1202605_0002',
+    deviceName: '东门围栏哨兵',
+    orgId: 'org_xja',
+    location: '东门围栏',
+    status: 'Pending',
+  },
+  {
+    id: 'ALM_0005',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 35).toISOString(),
+    type: '车辆逆行',
+    level: 'Critical',
+    deviceId: 'GuardXV1202605_0001',
+    deviceName: '南门主通道哨兵',
+    orgId: 'org_xja',
+    location: '南门主通道',
+    status: 'Processing',
+    handler: 'XJA_Admin',
+  },
+  {
+    id: 'ALM_0006',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 44).toISOString(),
+    type: '人员闯入',
+    level: 'Critical',
+    deviceId: 'GuardXV1202605_0002',
+    deviceName: '东门围栏哨兵',
+    orgId: 'org_xja',
+    location: '东门围栏',
+    status: 'Resolved',
+    handler: 'XJA_User',
+  },
+  {
+    id: 'ALM_0007',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 52).toISOString(),
+    type: '无人机徘徊',
+    level: 'Info',
+    deviceId: 'GuardXV1202605_0001',
+    deviceName: '南门主通道哨兵',
+    orgId: 'org_xja',
+    location: '南门主通道',
+    status: 'Pending',
+  },
+  {
+    id: 'ALM_0008',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 61).toISOString(),
+    type: '车辆闯入',
+    level: 'Warning',
+    deviceId: 'GuardXV1202605_0002',
+    deviceName: '东门围栏哨兵',
+    orgId: 'org_xja',
+    location: '东门围栏',
+    status: 'Resolved',
+    handler: 'XJA_Admin',
+  },
+  {
+    id: 'ALM_0009',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 70).toISOString(),
+    type: '人员闯入',
+    level: 'Info',
+    deviceId: 'GuardXV1202605_0001',
+    deviceName: '南门主通道哨兵',
+    orgId: 'org_xja',
+    location: '南门主通道',
+    status: 'Processing',
+    handler: 'XJA_User',
+  },
+  {
+    id: 'ALM_0010',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 79).toISOString(),
+    type: '无人机靠近',
+    level: 'Critical',
+    deviceId: 'GuardXV1202605_0002',
+    deviceName: '东门围栏哨兵',
+    orgId: 'org_xja',
+    location: '东门围栏',
+    status: 'Resolved',
+    handler: 'XJA_Admin',
+  },
+  {
+    id: 'ALM_0011',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 88).toISOString(),
+    type: '车辆违停',
+    level: 'Warning',
+    deviceId: 'GuardXV1202605_0001',
+    deviceName: '南门主通道哨兵',
+    orgId: 'org_xja',
+    location: '南门主通道',
+    status: 'Pending',
+  },
+  {
+    id: 'ALM_0012',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 97).toISOString(),
+    type: '人员徘徊',
+    level: 'Info',
+    deviceId: 'GuardXV1202605_0002',
+    deviceName: '东门围栏哨兵',
+    orgId: 'org_xja',
+    location: '东门围栏',
+    status: 'Resolved',
+    handler: 'XJA_User',
+  },
+  {
+    id: 'ALM_0013',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 106).toISOString(),
+    type: '车辆违停',
+    level: 'Info',
+    deviceId: 'GuardXV1202605_0003',
+    deviceName: '西门车道哨兵',
+    orgId: 'org_xza',
+    location: '西门车道',
+    status: 'Pending',
+  },
+  {
+    id: 'ALM_0014',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 115).toISOString(),
+    type: '人员闯入',
+    level: 'Critical',
+    deviceId: 'GuardXV1202605_0003',
+    deviceName: '西门车道哨兵',
+    orgId: 'org_xza',
+    location: '西门车道',
+    status: 'Processing',
+    handler: 'XZA_User',
+  },
+  {
+    id: 'ALM_0015',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 124).toISOString(),
+    type: '无人机靠近',
+    level: 'Warning',
+    deviceId: 'GuardXV1202605_0003',
+    deviceName: '西门车道哨兵',
+    orgId: 'org_xza',
+    location: '西门车道',
+    status: 'Resolved',
+    handler: 'XZA_Admin',
+  },
+  {
+    id: 'ALM_0016',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 133).toISOString(),
+    type: '人员徘徊',
+    level: 'Info',
+    deviceId: 'GuardXV1202605_0001',
+    deviceName: '南门主通道哨兵',
+    orgId: 'org_xja',
+    location: '南门主通道',
+    status: 'Pending',
+  },
+  {
+    id: 'ALM_0017',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 142).toISOString(),
+    type: '车辆闯入',
+    level: 'Warning',
+    deviceId: 'GuardXV1202605_0002',
+    deviceName: '东门围栏哨兵',
+    orgId: 'org_xja',
+    location: '东门围栏',
+    status: 'Processing',
+    handler: 'XJA_Admin',
+  },
+  {
+    id: 'ALM_0018',
+    occurredAt: new Date(Date.now() - 1000 * 60 * 151).toISOString(),
+    type: '无人机徘徊',
     level: 'Info',
     deviceId: 'GuardXV1202605_0001',
     deviceName: '南门主通道哨兵',
@@ -347,9 +525,12 @@ const alarms: Alarm[] = [
   },
 ]
 
+const mockFailRate = Number((globalThis as unknown as { __MOCK_FAIL_RATE__?: number }).__MOCK_FAIL_RATE__ ?? 0)
+
 function maybeFail() {
+  if (!mockFailRate) return
   const r = Math.random()
-  if (r < 0.08) throw new Error('网络波动，请重试')
+  if (r < mockFailRate) throw new Error('网络波动，请重试')
 }
 
 export interface PageResult<T> {
@@ -521,6 +702,12 @@ export async function bindDevice(input: {
     name: input.name,
     orgId: input.orgId,
     location: input.location,
+    coords:
+      current.coords ??
+      ({
+        lat: 30.70 + Math.random() * 0.08,
+        lng: 120.68 + Math.random() * 0.10,
+      } as const),
     note: input.note,
     bindAt: nowIso(),
     onlineStatus: 'Offline',
@@ -534,6 +721,111 @@ export async function bindDevice(input: {
   }
 
   return next
+}
+
+export async function bindBatchDevices(input: {
+  batchId: string
+  orgId: string
+  count: number
+}) {
+  await sleep(620)
+  maybeFail()
+  const batch = batches.find((b) => b.id === input.batchId)
+  if (!batch) throw new Error('批次不存在')
+  if (input.count <= 0) throw new Error('绑定数量需大于 0')
+
+  const items = batchDeviceItems[input.batchId] ?? []
+  const selectable = items.filter((it) => !it.orgId).slice(0, input.count)
+  if (selectable.length === 0) throw new Error('该批次暂无可绑定设备')
+
+  const boundAt = nowIso()
+  const bound: Device[] = []
+
+  selectable.forEach((it) => {
+    const idx = devices.findIndex((d) => d.id === it.deviceId)
+    const next: Device = {
+      id: it.deviceId,
+      name: `设备 ${it.deviceId.slice(-4)}`,
+      model: batch.model ?? 'AOV-2.0',
+      onlineStatus: 'Offline',
+      orgId: input.orgId,
+      batchId: input.batchId,
+      bindAt: boundAt,
+      coords: {
+        lat: 30.70 + Math.random() * 0.08,
+        lng: 120.68 + Math.random() * 0.10,
+      },
+    }
+    if (idx >= 0) {
+      const current = devices[idx]
+      if (!current.orgId) {
+        devices[idx] = {
+          ...next,
+          ...current,
+          name: next.name,
+          orgId: input.orgId,
+          onlineStatus: 'Offline',
+          bindAt: boundAt,
+        }
+      }
+    } else {
+      devices.push(next)
+    }
+
+    const itemIdx = items.findIndex((x) => x.deviceId === it.deviceId)
+    if (itemIdx >= 0) {
+      items[itemIdx] = { ...items[itemIdx], orgId: input.orgId, bindAt: boundAt, onlineStatus: 'Offline' }
+    }
+    bound.push(next)
+  })
+
+  return { bound: bound.length }
+}
+
+export async function bindDevicesBulk(input: { deviceIds: string[]; orgId: string }) {
+  await sleep(620)
+  maybeFail()
+
+  const boundAt = nowIso()
+  const failed: Array<{ deviceId: string; reason: string }> = []
+  let bound = 0
+
+  input.deviceIds.forEach((deviceId) => {
+    const idx = devices.findIndex((d) => d.id === deviceId)
+    if (idx < 0) {
+      failed.push({ deviceId, reason: '设备不存在' })
+      return
+    }
+    const current = devices[idx]
+    if (current.orgId) {
+      failed.push({ deviceId, reason: '设备已绑定' })
+      return
+    }
+
+    const next: Device = {
+      ...current,
+      name: current.name || `设备 ${deviceId.slice(-4)}`,
+      orgId: input.orgId,
+      onlineStatus: 'Offline',
+      bindAt: boundAt,
+      coords:
+        current.coords ??
+        ({
+          lat: 30.70 + Math.random() * 0.08,
+          lng: 120.68 + Math.random() * 0.10,
+        } as const),
+    }
+    devices[idx] = next
+
+    const items = batchDeviceItems[current.batchId ?? ''] ?? []
+    const itemIdx = items.findIndex((it) => it.deviceId === current.id)
+    if (itemIdx >= 0) {
+      items[itemIdx] = { ...items[itemIdx], orgId: input.orgId, bindAt: boundAt, onlineStatus: next.onlineStatus }
+    }
+    bound += 1
+  })
+
+  return { bound, failed }
 }
 
 export async function updateDevice(input: Pick<Device, 'id' | 'name' | 'location' | 'note'>) {

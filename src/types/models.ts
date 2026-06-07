@@ -26,6 +26,7 @@ export interface Device {
   ip?: string
   firmwareVersion?: string
   location?: string
+  coords?: { lat: number; lng: number }
   note?: string
   batchId?: string
   bindAt?: string
@@ -66,4 +67,3 @@ export interface Alarm {
   status: AlarmStatus
   handler?: string
 }
-

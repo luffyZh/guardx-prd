@@ -7,6 +7,7 @@ import { Badge, StatusDot } from '../components/Badge'
 import { Button } from '../components/Button'
 import { Card, CardBody, CardHeader } from '../components/Card'
 import { cn } from '../lib/cn'
+import { formatCoord } from '../lib/coords'
 import { useAuth } from '../app/auth/useAuth'
 import { useTheme } from '../app/theme/useTheme'
 
@@ -101,9 +102,13 @@ function formatTwo(n: number) {
   return n < 10 ? `0${n}` : `${n}`
 }
 
-function weekdayZh(d: Date) {
-  const map = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-  return map[d.getDay()] ?? ''
+/**
+ * 日期时间：2026-06-07 12:00:00
+ * @param d 
+ * @returns 
+ */
+function formatDate(d: Date) {
+  return `${d.getFullYear()}-${formatTwo(d.getMonth() + 1)}-${formatTwo(d.getDate())} ${formatTwo(d.getHours())}:${formatTwo(d.getMinutes())}:${formatTwo(d.getSeconds())}`
 }
 
 function initials(name: string) {
@@ -113,14 +118,6 @@ function initials(name: string) {
   const first = parts[0]?.[0] ?? '?'
   const second = parts.length > 1 ? parts[parts.length - 1]?.[0] ?? '' : trimmed[1] ?? ''
   return `${first}${second}`.toUpperCase()
-}
-
-function formatCoord(lat: number, lng: number) {
-  const latDir = lat >= 0 ? 'N' : 'S'
-  const lngDir = lng >= 0 ? 'E' : 'W'
-  const latAbs = Math.abs(lat).toFixed(5)
-  const lngAbs = Math.abs(lng).toFixed(5)
-  return `${latDir} ${latAbs}, ${lngDir} ${lngAbs}`
 }
 
 function Donut({
@@ -202,7 +199,7 @@ function TrendChart({
   }>
 }) {
   const w = 560
-  const h = 240
+  const h = 150
   const pad = 26
   const all = series.flatMap((s) => s.values)
   const min = Math.min(...all)
@@ -222,8 +219,8 @@ function TrendChart({
 
   return (
     <div className="space-y-3">
-      <div className="rounded-xl border border-border bg-bg/20 p-3">
-        <svg viewBox={`0 0 ${w} ${h}`} className="h-[210px] w-full">
+      <div className="rounded-xl border border-border bg-bg/20">
+        <svg viewBox={`0 0 ${w} ${h}`} className="h-[150px] w-full">
           {Array.from({ length: 5 }).map((_, i) => {
             const yy = pad + (i / 4) * (h - pad * 2)
             return <line key={i} x1={pad} x2={w - pad} y1={yy} y2={yy} stroke="rgb(var(--border))" />
@@ -626,23 +623,14 @@ export function WallboardPage() {
             </CardBody>
           </Card>
 
-          <div className="flex min-h-0 flex-col gap-4 overflow-hidden">
+          <div className="flex min-h-0 flex-col gap-4 overflow-y-auto">
             <Card className="min-h-0">
               <CardHeader>
                 <div className="text-sm font-semibold">告警类型分布</div>
-                <Badge tone="muted">{weekdayZh(now)}</Badge>
+                <Badge tone="muted">{formatDate(now)}</Badge>
               </CardHeader>
               <CardBody className="space-y-4">
                 <div className="grid grid-cols-[1fr_auto] items-center gap-4">
-                  <div className="rounded-2xl border border-border bg-bg/20 p-4">
-                    <div className="text-xs text-muted">今日告警</div>
-                    <div className="mt-2 text-4xl font-semibold">
-                      {formatTwo(now.getHours())}:{formatTwo(now.getMinutes())}
-                    </div>
-                    <div className="mt-1 text-xs text-muted">
-                      {now.getMonth() + 1}月{now.getDate()}日
-                    </div>
-                  </div>
                   <Donut segments={donutSegments} />
                 </div>
               </CardBody>
@@ -665,19 +653,19 @@ export function WallboardPage() {
                   <Button size="sm">进入设备管理</Button>
                 </Link>
               </CardHeader>
-              <CardBody className="min-h-0 flex-1 space-y-4 overflow-hidden">
+              <CardBody className="flex min-h-0 flex-1 flex-col space-y-4 overflow-hidden">
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="rounded-2xl border border-border bg-bg/20 px-4 py-3">
+                  <div className="rounded-2xl border border-border bg-bg/20 px-3 py-2">
                     <div className="text-xs text-muted">设备总数</div>
-                    <div className="mt-1 text-2xl font-semibold">42</div>
+                    <div className="mt-1 text-xl font-semibold">42</div>
                   </div>
-                  <div className="rounded-2xl border border-border bg-bg/20 px-4 py-3">
+                  <div className="rounded-2xl border border-border bg-bg/20 px-3 py-2">
                     <div className="text-xs text-muted">设备在线</div>
-                    <div className="mt-1 text-2xl font-semibold text-status-success">34</div>
+                    <div className="mt-1 text-xl font-semibold text-status-success">34</div>
                   </div>
-                  <div className="rounded-2xl border border-border bg-bg/20 px-4 py-3">
+                  <div className="rounded-2xl border border-border bg-bg/20 px-3 py-2">
                     <div className="text-xs text-muted">设备异常</div>
-                    <div className="mt-1 text-2xl font-semibold text-status-danger">8</div>
+                    <div className="mt-1 text-xl font-semibold text-status-danger">8</div>
                   </div>
                 </div>
 

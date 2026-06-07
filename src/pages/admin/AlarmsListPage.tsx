@@ -15,10 +15,22 @@ import { deleteAlarm, listAlarms, listAllOrgs } from '../../mocks/api'
 
 const pageSize = 10
 
-function levelBadge(level: Alarm['level']) {
-  if (level === 'Critical') return <Badge tone="danger">严重</Badge>
-  if (level === 'Warning') return <Badge tone="warning">警告</Badge>
-  return <Badge tone="info">提示</Badge>
+function alarmTypeTone(type: string) {
+  if (type.includes('车')) return 'info' as const
+  if (type.includes('无人机')) return 'warning' as const
+  return 'danger' as const
+}
+
+function alarmTypeLabel(type: string) {
+  if (type.includes('车')) return '车辆'
+  if (type.includes('无人机')) return '无人机'
+  return '人员'
+}
+
+function alarmTypeTagClass(tone: ReturnType<typeof alarmTypeTone>) {
+  if (tone === 'info') return 'border-transparent bg-status-info text-white'
+  if (tone === 'warning') return 'border-transparent bg-status-warning text-white'
+  return 'border-transparent bg-status-danger text-white'
 }
 
 function statusBadge(status: Alarm['status']) {
@@ -35,7 +47,6 @@ export function AlarmsListPage() {
   const [orgs, setOrgs] = useState<Org[]>([])
   const [q, setQ] = useState(sp.get('q') ?? '')
   const [timePreset, setTimePreset] = useState<'Today' | '7d' | '30d'>('Today')
-  const [level, setLevel] = useState<'All' | Alarm['level']>('All')
   const [statusTab, setStatusTab] = useState<'All' | Alarm['status']>('All')
   const [orgId, setOrgId] = useState<'All' | string>('All')
   const [page, setPage] = useState(1)
@@ -87,7 +98,7 @@ export function AlarmsListPage() {
       try {
         const res = await listAlarms({
           q: effectiveQ,
-          level,
+          level: 'All',
           status: statusTab,
           timePreset,
           orgId: effectiveOrg,
@@ -109,7 +120,7 @@ export function AlarmsListPage() {
     return () => {
       alive = false
     }
-  }, [effectiveQ, level, statusTab, timePreset, effectiveOrg, page])
+  }, [effectiveQ, statusTab, timePreset, effectiveOrg, page])
 
   const openDetail = (a: Alarm) => {
     setDetail(a)
@@ -179,15 +190,6 @@ export function AlarmsListPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>告警级别</Label>
-              <Select value={level} onChange={(e) => setLevel(e.target.value as Alarm['level'] | 'All')}>
-                <option value="All">全部</option>
-                <option value="Critical">严重</option>
-                <option value="Warning">警告</option>
-                <option value="Info">提示</option>
-              </Select>
-            </div>
-            <div className="space-y-2">
               <Label>归属组织</Label>
               <Select value={effectiveOrg} disabled={user?.role !== 'SystemAdmin'} onChange={(e) => setOrgId(e.target.value)}>
                 <option value="All">全部</option>
@@ -207,10 +209,9 @@ export function AlarmsListPage() {
             <Table>
               <thead>
                 <tr>
-                  <Th>告警编号</Th>
+                  <Th>告警哨兵 ID</Th>
                   <Th>触发时间</Th>
                   <Th>告警类型</Th>
-                  <Th>级别</Th>
                   <Th>触发设备</Th>
                   <Th>位置信息</Th>
                   <Th>处理状态</Th>
@@ -221,23 +222,26 @@ export function AlarmsListPage() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <Td colSpan={9} className="py-10 text-center text-muted">
+                    <Td colSpan={8} className="py-10 text-center text-muted">
                       加载中...
                     </Td>
                   </tr>
                 ) : items.length === 0 ? (
                   <tr>
-                    <Td colSpan={9} className="py-10 text-center text-muted">
+                    <Td colSpan={8} className="py-10 text-center text-muted">
                       暂无数据
                     </Td>
                   </tr>
                 ) : (
                   items.map((a) => (
                     <Tr key={a.id}>
-                      <Td className="font-medium">{a.id}</Td>
+                      <Td className="font-medium">{a.deviceId}</Td>
                       <Td className="text-xs text-muted">{a.occurredAt.slice(0, 19).replace('T', ' ')}</Td>
-                      <Td className="font-medium">{a.type}</Td>
-                      <Td>{levelBadge(a.level)}</Td>
+                      <Td>
+                        <Badge tone={alarmTypeTone(a.type)} className={alarmTypeTagClass(alarmTypeTone(a.type))}>
+                          {alarmTypeLabel(a.type)}
+                        </Badge>
+                      </Td>
                       <Td className="text-xs text-muted">
                         {a.deviceName}
                         <div className="text-[11px] text-muted">{a.deviceId}</div>
@@ -287,8 +291,6 @@ export function AlarmsListPage() {
                 <div className="font-semibold">{detail?.occurredAt ? detail.occurredAt.slice(0, 19).replace('T', ' ') : '-'}</div>
                 <div className="text-muted">类型</div>
                 <div className="font-semibold">{detail?.type ?? '-'}</div>
-                <div className="text-muted">级别</div>
-                <div className="font-semibold">{detail ? levelBadge(detail.level) : '-'}</div>
                 <div className="text-muted">状态</div>
                 <div className="font-semibold">{detail ? statusBadge(detail.status) : '-'}</div>
               </div>
