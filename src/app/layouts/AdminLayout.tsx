@@ -195,18 +195,20 @@ export function AdminLayout() {
               size="sm"
               variant="ghost"
               onClick={toggle}
-              className="h-9 w-9 rounded-xl p-0"
+              className="h-10 w-10 rounded-xl p-0"
               aria-label="切换主题"
             >
-              {isDark ? <MoonIcon className="h-5 w-5" /> : <SunIcon className="h-5 w-5" />}
+              {isDark ? <MoonIcon className="h-6 w-6" /> : <SunIcon className="h-6 w-6" />}
             </Button>
 
             <div className="relative" ref={userMenuWrapRef}>
-              <Button
-                size="sm"
-                variant="secondary"
+              <button
+                type="button"
                 onClick={() => setUserMenuOpen((v) => !v)}
-                className="h-9 rounded-xl px-2.5"
+                className={cn(
+                  'flex h-10 items-center rounded-xl px-2.5 transition hover:bg-bg/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600/60',
+                  userMenuOpen && 'bg-bg/30',
+                )}
               >
                 <div className="flex items-center gap-2">
                   <div className="grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br from-brand-600/80 to-brand-800 text-[11px] font-semibold text-white">
@@ -215,7 +217,7 @@ export function AdminLayout() {
                   <div className="max-w-[140px] truncate text-xs font-semibold">{user?.name ?? '访客'}</div>
                   <ChevronDownIcon className={cn('h-4 w-4 text-muted transition', userMenuOpen && 'rotate-180')} />
                 </div>
-              </Button>
+              </button>
 
               {userMenuOpen && (
                 <div className="absolute right-0 top-[44px] z-30 w-[210px] overflow-hidden rounded-2xl border border-border bg-surface shadow-card">

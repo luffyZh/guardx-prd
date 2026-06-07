@@ -115,6 +115,14 @@ function initials(name: string) {
   return `${first}${second}`.toUpperCase()
 }
 
+function formatCoord(lat: number, lng: number) {
+  const latDir = lat >= 0 ? 'N' : 'S'
+  const lngDir = lng >= 0 ? 'E' : 'W'
+  const latAbs = Math.abs(lat).toFixed(5)
+  const lngAbs = Math.abs(lng).toFixed(5)
+  return `${latDir} ${latAbs}, ${lngDir} ${lngAbs}`
+}
+
 function Donut({
   segments,
 }: {
@@ -309,7 +317,7 @@ export function WallboardPage() {
       {
         id: 'GX-010001',
         category: '人员闯入',
-        location: '嘉兴市 · 南湖区 · 七星街道',
+        coords: { lat: 30.74866, lng: 120.76123 },
         time: '10:55',
         tone: 'danger' as const,
         image: PeopleImg,
@@ -317,7 +325,7 @@ export function WallboardPage() {
       {
         id: 'GX-020013',
         category: '车辆违停',
-        location: '嘉兴市 · 秀洲区 · 新塍镇',
+        coords: { lat: 30.70842, lng: 120.69291 },
         time: '10:42',
         tone: 'warning' as const,
         image: CarImg,
@@ -325,7 +333,7 @@ export function WallboardPage() {
       {
         id: 'GX-030007',
         category: '无人机靠近',
-        location: '嘉兴市 · 海盐县 · 武原街道',
+        coords: { lat: 30.52637, lng: 120.93408 },
         time: '10:18',
         tone: 'info' as const,
         image: UavImg,
@@ -333,7 +341,7 @@ export function WallboardPage() {
       {
         id: 'GX-010019',
         category: '异常徘徊',
-        location: '嘉兴市 · 平湖市 · 当湖街道',
+        coords: { lat: 30.67621, lng: 121.01488 },
         time: '09:57',
         tone: 'warning' as const,
         image: PeopleImg,
@@ -341,7 +349,7 @@ export function WallboardPage() {
       {
         id: 'GX-020021',
         category: '设备遮挡',
-        location: '嘉兴市 · 嘉善县 · 魏塘街道',
+        coords: { lat: 30.84215, lng: 120.92567 },
         time: '09:22',
         tone: 'danger' as const,
         image: CarImg,
@@ -423,18 +431,20 @@ export function WallboardPage() {
               size="sm"
               variant="ghost"
               onClick={toggle}
-              className="h-9 w-9 rounded-xl p-0"
+              className="h-12 w-12 rounded-xl p-0"
               aria-label="切换主题"
             >
-              {isDark ? <MoonIcon className="h-5 w-5" /> : <SunIcon className="h-5 w-5" />}
+              {isDark ? <MoonIcon className="h-6 w-6" /> : <SunIcon className="h-6 w-6" />}
             </Button>
 
             <div className="relative" ref={userMenuWrapRef}>
-              <Button
-                size="sm"
-                variant="secondary"
+              <button
+                type="button"
                 onClick={() => setUserMenuOpen((v) => !v)}
-                className="h-9 rounded-xl px-2.5"
+                className={cn(
+                  'flex h-10 items-center rounded-xl px-2.5 transition hover:bg-bg/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600/60',
+                  userMenuOpen && 'bg-bg/30',
+                )}
               >
                 <div className="flex items-center gap-2">
                   <div className="grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br from-brand-600/80 to-brand-800 text-[11px] font-semibold text-white">
@@ -443,7 +453,7 @@ export function WallboardPage() {
                   <div className="max-w-[140px] truncate text-xs font-semibold">{user?.name ?? '访客'}</div>
                   <ChevronDownIcon className={cn('h-4 w-4 text-muted transition', userMenuOpen && 'rotate-180')} />
                 </div>
-              </Button>
+              </button>
 
               {userMenuOpen && (
                 <div className="absolute right-0 top-[44px] z-30 w-[210px] overflow-hidden rounded-2xl border border-border bg-surface shadow-card">
@@ -494,23 +504,29 @@ export function WallboardPage() {
                   <div className="relative">
                     <img src={a.image} alt={a.category} className="h-36 w-full object-cover" />
                     <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-bg/90 to-transparent" />
-                    <div className="absolute left-3 top-3">
-                      <Badge tone={a.tone}>
-                        <StatusDot tone={a.tone} />
-                        {a.category}
-                      </Badge>
-                    </div>
                     <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
                       <div>
                         <div className="text-[11px] text-muted">设备 ID</div>
                         <div className="text-lg font-semibold tracking-wide">{a.id}</div>
                       </div>
-                      <div className="text-xs font-semibold text-muted">{a.time}</div>
+                      <div className="flex flex-col items-end gap-2">
+                        <div className="text-xs font-semibold text-muted">{a.time}</div>
+                        <span
+                          className={cn(
+                            'inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold text-white shadow-sm ring-1 ring-white/10',
+                            a.tone === 'danger' && 'bg-status-danger',
+                            a.tone === 'warning' && 'bg-status-warning',
+                            a.tone === 'info' && 'bg-status-info',
+                          )}
+                        >
+                          {a.category}
+                        </span>
+                      </div>
                     </div>
                   </div>
                   <div className="px-4 py-3">
-                    <div className="text-xs text-muted">地理位置</div>
-                    <div className="mt-1 text-sm font-medium">{a.location}</div>
+                    <div className="text-xs text-muted">经纬度</div>
+                    <div className="mt-1 text-sm font-semibold tracking-tight">{formatCoord(a.coords.lat, a.coords.lng)}</div>
                   </div>
                 </div>
               ))}
